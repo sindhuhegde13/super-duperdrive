@@ -3,6 +3,9 @@ package com.nanodegree.superduperdrive.controller;
 import com.nanodegree.superduperdrive.model.FileForm;
 import com.nanodegree.superduperdrive.model.Files;
 import com.nanodegree.superduperdrive.services.FilesService;
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,8 +14,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +30,7 @@ import java.io.InputStream;
  */
 @Controller
 @RequestMapping("/files")
-public class FileController {
+public class FileController implements HandlerExceptionResolver{
 
     private FilesService filesService;
 
@@ -45,7 +53,7 @@ public class FileController {
      * @throws IOException the io exception
      */
     @PostMapping("/upload")
-    public String saveFile(Authentication authentication, @ModelAttribute("fileForm") FileForm fileForm, Model model) throws IOException {
+    public String saveFile(Authentication authentication, @ModelAttribute("fileForm") FileForm fileForm, Model model) throws IOException, SizeLimitExceededException {
         String username = authentication.getName();
         if(fileForm.getFileUpload().getSize() == 0) {
             model.addAttribute("result","error");
@@ -99,5 +107,15 @@ public class FileController {
         filesService.deleteFiles(files.getFileName());
         model.addAttribute("result","success");
         return "result";
+    }
+
+    @Override
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        if (ex instanceof MaxUploadSizeExceededException) {
+            modelAndView.getModel().put("message", "File size exceeds limit!");
+            modelAndView.addObject("message","File size exceeds limit. Please upload a file within 20MB");
+        }
+        return modelAndView;
     }
 }
