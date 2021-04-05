@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>ERROR</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
+
+    <title>Error</title>
 </head>
-<body>
-<h1>Error!!!</h1>
-<div th:if="${message}">
-    <h2 th:text="${message}"/>
+<body class="p-3 mb-2 bg-light text-black">
+<div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
+    <div class="alert alert-danger fill-parent">
+        <h1 class="display-5">Error</h1>
+        <span th:text="${message}">Example Error Message</span>
+        <span>Click <a href="/home" id="result-fail">here</a> to continue.</span>
+    </div>
 </div>
 </body>
 </html>
