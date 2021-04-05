@@ -1,10 +1,7 @@
 package com.nanodegree.superduperdrive;
 
 import com.nanodegree.superduperdrive.model.Notes;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -156,16 +153,15 @@ public class NotePage {
     /**
      * Find element by key boolean.
      *
-     * @param locatorKey the locator key
+     * @param element the locator key
      * @param driver     the driver
      * @return the boolean
      */
-    public boolean findElementByKey(By locatorKey, WebDriver driver) {
+    public boolean findElementByKey(By element, WebDriver driver) {
         try {
-            driver.findElement(locatorKey);
-
+            driver.findElement(element);
             return true;
-        } catch (org.openqa.selenium.NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             return false;
         }
     }

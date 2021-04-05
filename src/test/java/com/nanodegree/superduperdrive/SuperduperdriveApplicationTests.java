@@ -4,11 +4,8 @@ import com.nanodegree.superduperdrive.model.Credentials;
 import com.nanodegree.superduperdrive.model.Notes;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -40,7 +37,7 @@ class SuperduperdriveApplicationTests {
 	/**
 	 * The Base url.
 	 */
-	public String baseURL;
+	public String localhostURL;
 
 	/**
 	 * Before all.
@@ -66,7 +63,7 @@ class SuperduperdriveApplicationTests {
 	 */
 	@BeforeEach
 	public void beforeEach() {
-		baseURL = baseURL = "http://localhost:" + port;
+		localhostURL = "http://localhost:" + port;
 		this.webDriverWait = new WebDriverWait (driver, 1000);
 	}
 
@@ -76,13 +73,13 @@ class SuperduperdriveApplicationTests {
 	@Test
 	@Order(1)
 	public void testAccessUser() {
-		driver.get("http://localhost:" + this.port + "/login");
+		driver.get(localhostURL + "/login");
 		assertEquals("Login", driver.getTitle());
-		driver.get("http://localhost:" + this.port + "/signup");
+		driver.get(localhostURL + "/signup");
 		assertEquals("Sign Up", driver.getTitle());
-		driver.get("http://localhost:" + this.port + "/home");
+		driver.get(localhostURL + "/home");
 		assertEquals("Login", driver.getTitle());
-		driver.get("http://localhost:" + this.port + "/files");
+		driver.get(localhostURL + "/files");
 		assertEquals("Login", driver.getTitle());
 	}
 
@@ -92,17 +89,17 @@ class SuperduperdriveApplicationTests {
 	@Test
 	@Order(2)
 	public void testSignUpLogOut() {
-		driver.get("http://localhost:" + this.port + "/signup");
+		driver.get(localhostURL + "/signup");
 		assertEquals("Sign Up", driver.getTitle());
 		SignupPage signupPage = new SignupPage(driver);
 		signupPage.signup("Test","User","test","password123");
-		driver.get("http://localhost:" + this.port + "/login");
+		driver.get(localhostURL + "/login");
 		assertEquals("Login", driver.getTitle());
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login("test","password123");
 		NotePage page = new NotePage(driver);
 		page.logout();
-		driver.get("http://localhost:" + this.port + "/home");
+		driver.get(localhostURL + "/home");
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		assertEquals("Login", driver.getTitle());
 	}
@@ -115,10 +112,10 @@ class SuperduperdriveApplicationTests {
 	public void testUserSignupLoginSubmit() {
 		String username = "testUser";
 		String password = "password123";
-		driver.get(baseURL + "/signup");
+		driver.get(localhostURL + "/signup");
 		SignupPage signupPage = new SignupPage(driver);
 		signupPage.signup("Test", "User", username, password);
-		driver.get(baseURL + "/login");
+		driver.get(localhostURL + "/login");
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(username, password);
 	}
@@ -160,8 +157,7 @@ class SuperduperdriveApplicationTests {
 		String modDescription = "This is test note 2.";
 		notePage.modifyNoteDescription(modDescription);
 		notePage.saveNoteChanges();
-		ResultPage resultPage = new ResultPage(driver);
-		resultPage.clickOk();
+		resultPageRedirection();
 		notePage.navToNotesTab();
 		Notes firstNote = notePage.viewFirstNote();
 		assertEquals(modTitle, firstNote.getNoteTitle());
@@ -183,8 +179,7 @@ class SuperduperdriveApplicationTests {
 		notePage.navToNotesTab();
 		Assertions.assertFalse(notePage.noNotes(driver));
 		notePage.deleteNote();
-		ResultPage resultPage = new ResultPage(driver);
-		resultPage.clickOk();
+		resultPageRedirection();
 		assertTrue(notePage.noNotes(driver));
 		notePage.logout();
 	}
@@ -200,8 +195,7 @@ class SuperduperdriveApplicationTests {
 		CredentialPage credentialPage  =  new CredentialPage(driver);
 		credentialPage.createAndVerifyCredential("http://testwebsite.com","test","password1",credentialPage,driver);
 		credentialPage.deleteCredential();
-		ResultPage resultPage = new ResultPage(driver);
-		resultPage.clickOk();
+		resultPageRedirection();
 		credentialPage.logout();
 	}
 
@@ -248,10 +242,14 @@ class SuperduperdriveApplicationTests {
 		credentialPage.createAndVerifyCredential("http://testwebsite.com","test","password1",credentialPage,driver);
 		assertFalse(credentialPage.noCredentials(driver));
 		credentialPage.deleteCredential();
-		ResultPage resultPage = new ResultPage(driver);
-		resultPage.clickOk();
+		resultPageRedirection();
 		credentialPage.navToCredentialsTab();
 		assertTrue(credentialPage.noCredentials(driver));
 		credentialPage.logout();
+	}
+
+	private void resultPageRedirection() {
+		ResultPage resultPage = new ResultPage(driver);
+		resultPage.clickOk();
 	}
 }
