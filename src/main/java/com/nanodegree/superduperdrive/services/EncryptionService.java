@@ -12,10 +12,20 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+/**
+ * The type Encryption service.
+ */
 @Service
 public class EncryptionService {
     private Logger logger = LoggerFactory.getLogger(EncryptionService.class);
 
+    /**
+     * Encrypt value string.
+     *
+     * @param data the data
+     * @param key  the key
+     * @return the string
+     */
     public String encryptValue(String data, String key) {
         byte[] encryptedValue = null;
 
@@ -32,6 +42,13 @@ public class EncryptionService {
         return Base64.getEncoder().encodeToString(encryptedValue);
     }
 
+    /**
+     * Decrypt value string.
+     *
+     * @param data the data
+     * @param key  the key
+     * @return the string
+     */
     public String decryptValue(String data, String key) {
         byte[] decryptedValue = null;
 

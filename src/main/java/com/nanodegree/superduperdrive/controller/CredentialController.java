@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/**
+ * The type Credential controller.
+ */
 @Controller
 @RequestMapping("/credentials")
 public class CredentialController {
@@ -19,11 +22,25 @@ public class CredentialController {
     private CredentialsService credentialsService;
     private EncryptionService encryptionService;
 
+    /**
+     * Instantiates a new Credential controller.
+     *
+     * @param credentialsService the credentials service
+     * @param encryptionService  the encryption service
+     */
     public CredentialController(CredentialsService credentialsService, EncryptionService encryptionService) {
         this.credentialsService = credentialsService;
         this.encryptionService = encryptionService;
     }
 
+    /**
+     * Add credential string.
+     *
+     * @param authentication the authentication
+     * @param credForm       the cred form
+     * @param model          the model
+     * @return the string
+     */
     @PostMapping("/addcred")
     public String addCredential(Authentication authentication, @ModelAttribute("credForm")CredentialForm credForm, Model model) {
         String username = authentication.getName();
@@ -40,12 +57,19 @@ public class CredentialController {
             credentialsService.addCred(credUrl,username,credUsername,encodedKey,encryptedPassword);
         }
         else {
-            credentialsService.updateCred(id,credUsername,credUrl,encodedKey,encryptedPassword);
+            credentialsService.updateCred(id,credUrl,credUsername,encodedKey,encryptedPassword);
         }
         model.addAttribute("result","success");
         return "result";
     }
 
+    /**
+     * Delete credential string.
+     *
+     * @param credId the cred id
+     * @param model  the model
+     * @return the string
+     */
     @GetMapping("/deletecred")
     public String deleteCredential(@RequestParam(required = false, name = "credentialId") Integer credId, Model model) {
         credentialsService.deleteCred(credId);

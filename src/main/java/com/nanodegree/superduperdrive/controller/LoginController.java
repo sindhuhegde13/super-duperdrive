@@ -7,16 +7,32 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * The type Login controller.
+ */
 @Controller
 public class LoginController {
 
+    /**
+     * Login view string.
+     *
+     * @param model the model
+     * @param value the value
+     * @return the string
+     */
     @GetMapping("/login")
     public String loginView(Model model,String value) {
         model.addAttribute("param",value);
         return "login";
     }
 
-    @GetMapping("/logout")
+    /**
+     * Log out view string.
+     *
+     * @param model the model
+     * @return the string
+     */
+    @PostMapping("/logout")
     public String logOutView(Model model) {
         return "redirect:/login?logout=" + true;
     }

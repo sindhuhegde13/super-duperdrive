@@ -17,16 +17,33 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * The type File controller.
+ */
 @Controller
 @RequestMapping("/files")
 public class FileController {
 
     private FilesService filesService;
 
+    /**
+     * Instantiates a new File controller.
+     *
+     * @param filesService the files service
+     */
     public FileController(FilesService filesService) {
         this.filesService = filesService;
     }
 
+    /**
+     * Save file string.
+     *
+     * @param authentication the authentication
+     * @param fileForm       the file form
+     * @param model          the model
+     * @return the string
+     * @throws IOException the io exception
+     */
     @PostMapping("/upload")
     public String saveFile(Authentication authentication, @ModelAttribute("fileForm") FileForm fileForm, Model model) throws IOException {
         String username = authentication.getName();
@@ -48,6 +65,12 @@ public class FileController {
         return "result";
     }
 
+    /**
+     * Download file response entity.
+     *
+     * @param fileId the file id
+     * @return the response entity
+     */
     @GetMapping("/viewfile")
     public ResponseEntity<InputStreamResource> downloadFile(
             @RequestParam(required = false, name = "fileId") Integer fileId) {
@@ -63,6 +86,13 @@ public class FileController {
                 .body(resource);
     }
 
+    /**
+     * Delete file string.
+     *
+     * @param fileId the file id
+     * @param model  the model
+     * @return the string
+     */
     @GetMapping("/deletefile")
     public String deleteFile(@RequestParam(required = false, name = "fileId") Integer fileId,Model model) {
         Files files = filesService.getFilesById(fileId);

@@ -9,16 +9,32 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The type Note controller.
+ */
 @Controller
 @RequestMapping("/notes")
 public class NoteController {
 
     private NotesService notesService;
 
+    /**
+     * Instantiates a new Note controller.
+     *
+     * @param notesService the notes service
+     */
     public NoteController(NotesService notesService) {
         this.notesService = notesService;
     }
 
+    /**
+     * Add new note string.
+     *
+     * @param authentication the authentication
+     * @param noteForm       the note form
+     * @param model          the model
+     * @return the string
+     */
     @PostMapping("/addnote")
     public String addNewNote(Authentication authentication, @ModelAttribute("noteForm") NoteForm noteForm, Model model) {
         String username = authentication.getName();
@@ -38,6 +54,13 @@ public class NoteController {
         return "result";
     }
 
+    /**
+     * Delete note string.
+     *
+     * @param noteId the note id
+     * @param model  the model
+     * @return the string
+     */
     @GetMapping("/deletenote")
     public String deleteNote(@RequestParam(required = false, name = "noteId") Integer noteId, Model model) {
         Notes notes = notesService.getNotesById(noteId);

@@ -11,12 +11,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+/**
+ * The type Authentication service.
+ */
 @Service
 public class AuthenticationService implements AuthenticationProvider {
 
     private UserMapper userMapper;
     private HashService hashService;
 
+    /**
+     * Instantiates a new Authentication service.
+     *
+     * @param userMapper  the user mapper
+     * @param hashService the hash service
+     */
     public AuthenticationService(UserMapper userMapper, HashService hashService) {
         this.userMapper = userMapper;
         this.hashService = hashService;
